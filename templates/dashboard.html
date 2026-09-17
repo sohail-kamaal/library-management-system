@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<h1>Dashboard</h1>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <span class="stat-number">{{ total_books }}</span>
+        <span class="stat-label">Total Books</span>
+    </div>
+    <div class="stat-card">
+        <span class="stat-number">{{ available_books }}</span>
+        <span class="stat-label">Available Now</span>
+    </div>
+    <div class="stat-card">
+        <span class="stat-number">{{ total_members }}</span>
+        <span class="stat-label">Members</span>
+    </div>
+    <div class="stat-card">
+        <span class="stat-number">{{ issued_count }}</span>
+        <span class="stat-label">Currently Issued</span>
+    </div>
+</div>
+
+<h2>Overdue Books</h2>
+{% if overdue %}
+<table>
+    <thead>
+        <tr><th>Book</th><th>Member</th><th>Due Date</th></tr>
+    </thead>
+    <tbody>
+        {% for row in overdue %}
+        <tr>
+            <td>{{ row.title }}</td>
+            <td>{{ row.name }}</td>
+            <td class="overdue">{{ row.due_date }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p class="empty">Nothing overdue right now.</p>
+{% endif %}
+{% endblock %}

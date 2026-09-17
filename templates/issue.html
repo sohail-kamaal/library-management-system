@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Issue / Return{% endblock %}
+
+{% block content %}
+<h1>Issue / Return</h1>
+
+<div class="card">
+    <h2>Issue a Book</h2>
+    {% if available_books and all_members %}
+    <form method="post" action="{{ url_for('issue_book') }}" class="inline-form">
+        <select name="book_id" required>
+            <option value="" disabled selected>Choose a book</option>
+            {% for b in available_books %}
+            <option value="{{ b.book_id }}">{{ b.title }} ({{ b.available_copies }} left)</option>
+            {% endfor %}
+        </select>
+        <select name="member_id" required>
+            <option value="" disabled selected>Choose a member</option>
+            {% for m in all_members %}
+            <option value="{{ m.member_id }}">{{ m.name }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Issue Book</button>
+    </form>
+    {% elif not available_books %}
+        <p class="empty">No books available to issue right now.</p>
+    {% else %}
+        <p class="empty">Add a member first before issuing books.</p>
+    {% endif %}
+</div>
+
+<h2>Currently Issued</h2>
+{% if issued %}
+<table>
+    <thead>
+        <tr><th>Book</th><th>Member</th><th>Issued On</th><th>Due Date</th><th></th></tr>
+    </thead>
+    <tbody>
+        {% for t in issued %}
+        <tr>
+            <td>{{ t.title }}</td>
+            <td>{{ t.name }}</td>
+            <td>{{ t.issue_date }}</td>
+            <td class="{{ 'overdue' if t.due_date < today else '' }}">{{ t.due_date }}</td>
+            <td>
+                <form method="post" action="{{ url_for('return_book', txn_id=t.txn_id) }}">
+                    <button type="submit">Mark Returned</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p class="empty">Nothing checked out at the moment.</p>
+{% endif %}
+{% endblock %}

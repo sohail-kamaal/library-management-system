@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Books{% endblock %}
+
+{% block content %}
+<h1>Books</h1>
+
+<form class="search-bar" method="get" action="{{ url_for('books') }}">
+    <input type="text" name="q" placeholder="Search by title, author or ISBN" value="{{ q }}">
+    <button type="submit">Search</button>
+    {% if q %}<a class="clear-link" href="{{ url_for('books') }}">Clear</a>{% endif %}
+</form>
+
+<div class="card">
+    <h2>Add a Book</h2>
+    <form method="post" action="{{ url_for('add_book') }}" class="inline-form">
+        <input type="text" name="title" placeholder="Title" required>
+        <input type="text" name="author" placeholder="Author" required>
+        <input type="text" name="isbn" placeholder="ISBN (optional)">
+        <input type="number" name="copies" placeholder="Copies" min="1" value="1" style="width: 90px;">
+        <button type="submit">Add Book</button>
+    </form>
+</div>
+
+{% if books %}
+<table>
+    <thead>
+        <tr>
+            <th>Title</th><th>Author</th><th>ISBN</th><th>Available</th><th>Total</th><th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for b in books %}
+        <tr>
+            <td>{{ b.title }}</td>
+            <td>{{ b.author }}</td>
+            <td>{{ b.isbn or "-" }}</td>
+            <td>{{ b.available_copies }}</td>
+            <td>{{ b.total_copies }}</td>
+            <td>
+                <form method="post" action="{{ url_for('delete_book', book_id=b.book_id) }}"
+                      onsubmit="return confirm('Remove this book?');">
+                    <button type="submit" class="danger">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p class="empty">No books found.</p>
+{% endif %}
+{% endblock %}

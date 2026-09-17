@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Library{% endblock %} - City Library</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header class="topbar">
+        <div class="brand">📚 City Library</div>
+        <nav>
+            <a href="{{ url_for('dashboard') }}" class="{{ 'active' if request.path == '/' else '' }}">Dashboard</a>
+            <a href="{{ url_for('books') }}" class="{{ 'active' if request.path == '/books' else '' }}">Books</a>
+            <a href="{{ url_for('members') }}" class="{{ 'active' if request.path == '/members' else '' }}">Members</a>
+            <a href="{{ url_for('issue_page') }}" class="{{ 'active' if request.path == '/issue' else '' }}">Issue / Return</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-wrap">
+                    {% for category, message in messages %}
+                        <div class="flash {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">Library Management System</footer>
+</body>
+</html>

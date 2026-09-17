@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Members{% endblock %}
+
+{% block content %}
+<h1>Members</h1>
+
+<div class="card">
+    <h2>Register a Member</h2>
+    <form method="post" action="{{ url_for('add_member') }}" class="inline-form">
+        <input type="text" name="name" placeholder="Full name" required>
+        <input type="email" name="email" placeholder="Email (optional)">
+        <input type="text" name="phone" placeholder="Phone (optional)">
+        <button type="submit">Add Member</button>
+    </form>
+</div>
+
+{% if members %}
+<table>
+    <thead>
+        <tr><th>Name</th><th>Email</th><th>Phone</th><th></th></tr>
+    </thead>
+    <tbody>
+        {% for m in members %}
+        <tr>
+            <td>{{ m.name }}</td>
+            <td>{{ m.email or "-" }}</td>
+            <td>{{ m.phone or "-" }}</td>
+            <td>
+                <form method="post" action="{{ url_for('delete_member', member_id=m.member_id) }}"
+                      onsubmit="return confirm('Remove this member?');">
+                    <button type="submit" class="danger">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p class="empty">No members registered yet.</p>
+{% endif %}
+{% endblock %}
